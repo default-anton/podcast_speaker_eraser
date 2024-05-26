@@ -13,6 +13,8 @@ from src.segment import Segment
 def select_unwanted_speakers(file_path: Path, segments: list[Segment]) -> list[str]:
     # Extract unique speakers
     unwanted_speakers = []
+    # Sort segments by speaker. This is required for the groupby function
+    segments.sort(key=lambda s: s.speaker)
     segments_by_speaker = groupby(segments, key=lambda s: s.speaker)
 
     audio = AudioSegment.from_file(file_path)
@@ -45,7 +47,7 @@ def select_unwanted_speakers(file_path: Path, segments: list[Segment]) -> list[s
                 break
 
             response = Prompt.ask(
-                "Do you want to delete this speaker? (y/n): ",
+                f"Do you want to delete speaker: [bold]{speaker}[/bold]?",
                 choices=["y", "n"],
                 default="n",
             )
@@ -54,6 +56,9 @@ def select_unwanted_speakers(file_path: Path, segments: list[Segment]) -> list[s
                 unwanted_speakers.append(speaker)
         finally:
             temp_clip_path.unlink(missing_ok=True)
+
+    # Restore the original order of segments
+    segments.sort(key=lambda s: s.start)
 
     return unwanted_speakers
 
