@@ -3,7 +3,6 @@ from pathlib import Path
 
 import torch
 from pyannote.audio import Pipeline
-from pyannote.audio.pipelines.utils.hook import ProgressHook
 from rich import print
 
 from src.segment import Segment
@@ -12,6 +11,10 @@ from src.segment import Segment
 def detect_speakers(file_path: Path) -> list[Segment]:
     """Detect speakers in an audio file and return the segments for each speaker."""
     print(f"[green]Detecting speakers in:[/green] {file_path}")
+
+    # it's here because it prints an ugly warning
+    from pyannote.audio.pipelines.utils.hook import ProgressHook
+
     pipeline = Pipeline.from_pretrained(
         "pyannote/speaker-diarization-3.1",
         use_auth_token=os.getenv("HUGGINGFACE_ACCESS_TOKEN"),

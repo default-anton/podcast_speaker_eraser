@@ -22,7 +22,9 @@ def main(rss: str) -> None:
     if target_speakers:
         delete_speakers(file_path, segments, target_speakers)
         speaker_word = "speakers" if len(target_speakers) > 1 else "speaker"
-        print(f"[green]Done![/green] Deleted {len(target_speakers)} unwanted {speaker_word} from {file_path}")
+        print(
+            f"[green]Done![/green] Deleted {len(target_speakers)} unwanted {speaker_word} from {file_path}"
+        )
     else:
         print("[green]No unwanted speakers found![/green]")
 
